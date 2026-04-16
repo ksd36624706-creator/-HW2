@@ -1,0 +1,282 @@
+===== PAGE 27 =====
+Copyright ©  2026 by Il-Chul Moon, AAILab, Dept. of Industrial and Systems Engineering, KAIST
+HW2
+27
+
+===== PAGE 28 =====
+Copyright ©  2026 by Il-Chul Moon, AAILab, Dept. of Industrial and Systems Engineering, KAIST
+ 28
+Homework Server
+• HW Server 
+• http://143.248.80.51:8000/
+
+
+===== PAGE 29 =====
+Copyright ©  2026 by Il-Chul Moon, AAILab, Dept. of Industrial and Systems Engineering, KAIST
+ 29
+Blackjack Leaderboard
+• http://143.248.80.51:8000/bingo/
+
+
+===== PAGE 30 =====
+Copyright ©  2026 by Il-Chul Moon, AAILab, Dept. of Industrial and Systems Engineering, KAIST
+ 30
+Bingo (Connect 4) Game
+• https://papergames.io/en/connect4
+• Free game play site
+• https://en.wikipedia.org/wiki/Connect_Four
+• Detailed game rule explanation
+• Connect Four is a classic two-player strategy game played on a vertical 7×6 grid.
+• Objective: Be the first player to form a horizontal, vertical, or diagonal line of four of your own 
+colored tokens.
+• Gameplay: Players take turns dropping one token into any of the seven columns. The tokens fall 
+straight down, occupying the lowest available space in that column.
+• Ending the Game: The game ends when one player connects four in a row or when the board is 
+completely filled, resulting in a draw.
+• Our customization
+• Width x Height to our variation setting : It can be 20 x 10
+• Consecutive stone : Originally 4, but we can variate the number of consecutive stones to win
+
+
+===== PAGE 31 =====
+Copyright ©  2026 by Il-Chul Moon, AAILab, Dept. of Industrial and Systems Engineering, KAIST
+ 31
+Bingo Disqualification Condition
+• Execution Error (Exception)
+• If the player's decision method raises any Python exception 
+• (e.g., a crash, syntax error within the logic, or reference error), 
+• they are immediately disqualified
+• Time Limit Exceeded (Timeout)
+• If the time taken to return a move exceeds the defined floatTimeLimit (default is 5.0 seconds)
+• Invalid Return Type
+• The player must return two integers (y, x). 
+• If the returned values are any other type (like strings, floats, or None), it results in disqualification. 
+• Illegal Move (Feasibility)
+• The move is disqualified if setState(x, y) returns False. 
+• This happens if the move violates the rules of Connect Four defined
+• You can use the game engine to identify this, but you should not inject any information to the game 
+engine while checking the feasibility
+• Out of Bounds: The coordinates are outside the grid.
+• Occupied Space: The chosen cell already contains a token.
+• Gravity Violation: The token is placed in mid-air. 
+
+===== PAGE 32 =====
+Copyright ©  2026 by Il-Chul Moon, AAILab, Dept. of Industrial and Systems Engineering, KAIST
+ 32
+Logs from Leaderboard 
+• Log as simple text file
+Click on student id to 
+get the logs
+Data Name Data Structure Description
+game_id String Repeated ID to ensure logs are grouped correctly.
+player_name String The unique ID/Name of the player who made the move.
+time Float The exact execution time of the decision method.
+decision y,x Tuple(int, int) The coordinates returned by the agent.
+grid String A string-serialized snapshot of the matGrid after the move.
+error String (Optional) Only appears if a player is disqualified.
+
+===== PAGE 33 =====
+Copyright ©  2026 by Il-Chul Moon, AAILab, Dept. of Industrial and Systems Engineering, KAIST
+ 33
+Evaluation Control Parameters
+• Admin can control the below settings
+• TA reserves the right to change any parameters in the below.
+• The default decision making time is 5 sec.
+
+
+===== PAGE 34 =====
+Copyright ©  2026 by Il-Chul Moon, AAILab, Dept. of Industrial and Systems Engineering, KAIST
+ 34
+Evaluations
+• Evaluation point
+• Competition
+• Total wins = 
+𝑀𝑦 𝑇𝑜𝑡𝑎𝑙 𝑊𝑖𝑛
+𝑃𝑜𝑠𝑠𝑖𝑏𝑙𝑒 𝑀𝑎𝑥 𝑇𝑜𝑡𝑎𝑙 𝑊𝑖𝑛 𝐶𝑛𝑡 (60%)
+• Average decision time= exp −0.1 ∗ max 0, 𝑇𝑖 − 𝑇𝑎𝑣𝑔 (20%)
+• Using the smoothing effect of sigmoid-based function
+• Report and implementation
+• Detailed description of algorithm for the decision-making (10%)
+• Good intuition and idea will merit scores
+• Use diagrams, examples, scenarios, etc
+• Detailed description of implementation of the described algorithm (10%)
+• Use diagrams, pseudo code, etc
+• Some coins if you submit your homework early, so others can benefit from the comparisons
+Click on result list to get 
+the competition results
+
+
+===== PAGE 35 =====
+Copyright ©  2026 by Il-Chul Moon, AAILab, Dept. of Industrial and Systems Engineering, KAIST
+ 35
+Sample Agent Structure and Code
+• PlayerAgent_99328162: Random Agent
+• Identifying Legal Moves
+• The decision method scans the board column 
+by column (x). 
+• For each column, it searches from the bottom 
+row upwards (range(height - 1, -1, -1)) to find 
+the first empty slot (0).
+• Gravity Simulation: By breaking the inner loop 
+after finding the first empty cell, it ensures it 
+only considers the lowest available row in each 
+column, correctly following the "gravity" rule of 
+the game.
+• Stochastic Strategy: It collects all these valid (y, 
+x) coordinates into a list called feasible_moves. 
+Then, it simply uses random.choice() to pick 
+one of those moves at random.
+• Terminal State: If the board is full and no moves 
+are found, it returns (None, None), which, 
+based on your GameEngine logic, would trigger 
+a disqualification or an end-of-game state.
+import random
+from hw2.players.BingoPlayerAgent import BaseBingoPlayer
+class PlayerAgent_99328162(BaseBingoPlayer):
+def __init__(self, strPlayerName):
+super().__init__(strPlayerName)
+def decision(self, matGrid):
+height, width = matGrid.shape
+feasible_moves = []
+for x in range(width):
+for y in range(height - 1, -1, -1):
+if matGrid[y][x] == 0:
+feasible_moves.append((y, x))
+break 
+if feasible_moves:
+return random.choice(feasible_moves)
+return (None, None)
+
+===== PAGE 36 =====
+Copyright ©  2026 by Il-Chul Moon, AAILab, Dept. of Industrial and Systems Engineering, KAIST
+ 36
+Leaderboard Submission Rules
+• Submit your implementation to leaderboard
+• Anytime during the homework period
+• Test before submission
+• Test locally with provided main file and with provided sample player agents
+• If you break the leaderboard without testing your player, 
+• You should be responsible by
+• Testing thoroughly in your local environment
+• Per breakdown event case by student’s responsibility, -1% deduction of your final score of this 
+homework
+
+===== PAGE 37 =====
+Copyright ©  2026 by Il-Chul Moon, AAILab, Dept. of Industrial and Systems Engineering, KAIST
+ 37
+Homework Deliverables
+• By 23:59, April 19
+• You will submit a zip file of 
+• Python Program folder
+• i.e. PyCharm project folder
+• Your implementations
+• You are free to make additional modules, files, classes, methods to solve the problem
+• Reports
+• N pages of 
+• Screenshots and diagrams
+• These are based upon your implementations!
+• To TA via
+• KLMS site
+
+===== PAGE 38 =====
+Copyright ©  2026 by Il-Chul Moon, AAILab, Dept. of Industrial and Systems Engineering, KAIST
+ 38
+Homework Objectives
+• Develop a program to play Bingo!
+• This is a special bingo
+• Green first, Red later, plays each turn, iteratively
+• 7 x 6 grid
+• Stones should be stacked from the bottom
+• A stone without its below support is infeasible
+• Consecutive 4 stones win the game
+• Diagonal, horizontal, vertical
+• Objective
+• Complete the baseline code to make AI play the game!
+• Develop the baseline code to compete the other AI from your classmates!
+Feasible 
+selection for 
+Green!
+Four 
+diagonals 
+win the game!
+
+===== PAGE 39 =====
+Copyright ©  2026 by Il-Chul Moon, AAILab, Dept. of Industrial and Systems Engineering, KAIST
+ 39
+Baseline Code : HW AI to complete (1)
+• Here, the basic strategy is building a 
+GameTree with a maximum depth, 
+and evaluate each TreeNode in 
+GameTree for its preference
+• GameTree
+• This is a big tree
+• Therefore, it should be expanded up to 
+a predefined maximum depth
+…..
+Total 7 Children
+Green turn transition
+…..
+Total 7 Children
+…..
+Total 7 Children
+Red turn transition
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+
+===== PAGE 40 =====
+Copyright ©  2026 by Il-Chul Moon, AAILab, Dept. of Industrial and Systems Engineering, KAIST
+ 40
+Baseline Code : HW AI to complete (2)
+…
+..Total 7 
+Children
+Green turn transition
+…
+..Total 7 
+Children
+…
+..Total 7 
+Children
+Red turn transition
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+• After generating the game tree to the maximum depth, we need to 
+evaluate each game tree node
+• Evaluation of TreeNode
+• Leaf node
+• Requires some heuristics of scoring mechanism
+• Loose case : -999999 score
+• Winning case : 100 score
+• # of Opponent’s 3 consecutive stones : -10 score for each case
+• # of My 3 consecutive stones : 10 score for each case
+• # of Opponent’s 2 consecutive stones : -3 score for each case
+• # of My 2 consecutive stones : 3 score for each case
+• Other node
+• If it is my turn, I am going to maximize the reward, so find maximum reward from 
+the node’s children
+• If it is opponent’s turn, they will minimize the reward, so find minimum reward 
+from the node’s children
+• Through recursion, you can fill out the evaluation up to root of the 
+GameTree
+• From this baseline strategy, you need to develop your own version 
+to compete others
